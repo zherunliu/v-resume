@@ -122,6 +122,7 @@ const setLocalStorageResume = () => {
       devAbilitiesList: devAbilitiesList.value,
       jobExperienceList: jobExperienceList.value,
       projectExperienceList: projectExperienceList.value,
+      awardExperienceList: awardExperienceList.value,
       researchExperienceList: researchExperienceList.value,
     }),
   )
