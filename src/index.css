@@ -1,0 +1,25 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-theme: #478fe1;
+  /* --color-theme: #00bd7e; */
+  --color-theme-light: #478fe180;
+  /* --color-theme-light: #00bd7e80; */
+}
+
+:root {
+  font-family: 'Microsoft YaHei', 'PingFang SC';
+
+  input,
+  textarea {
+    @apply border-theme h-8 border-b focus:outline-none;
+  }
+
+  textarea {
+    @apply resize-y;
+  }
+
+  button {
+    @apply border-theme hover:bg-theme-light h-8 rounded border-b hover:cursor-pointer;
+  }
+}
