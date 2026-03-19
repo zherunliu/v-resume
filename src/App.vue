@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
 import Base from './components/base/index.vue'
 import List from './components/list/index.vue'
 import { resumeSchema, type THeaders, type TEduExperience } from './schemas'
@@ -31,6 +31,7 @@ const githubHref = computed(() => `https://github.com/${github.value}`)
 
 const myInfo = ref('女, 24, 硕士, 前端/全栈工程师')
 
+const newEduItem = ref(['', '', ''] as TEduExperience)
 const eduExperienceList = ref<TEduExperienceList>([
   ['高中: 2016-2019', '衡阳市第八中学', '理科'],
   ['本科: 2019-2023', '温州大学', '数据科学与大数据技术'],
@@ -76,8 +77,6 @@ const researchExperienceList = ref<string[]>([
 const handleContextMenu = () => {
   if (isChanging.value) {
     setLocalStorageResume()
-  } else {
-    getLocalStorageResume()
   }
   isChanging.value = !isChanging.value
 }
@@ -93,6 +92,7 @@ const getLocalStorageResume = () => {
       return
     }
     const resume = res.data
+    console.log(resume.name)
     headers.value = resume.headers
     name.value = resume.name
     tel.value = resume.tel
@@ -127,12 +127,13 @@ const setLocalStorageResume = () => {
     }),
   )
 }
-
+onMounted(getLocalStorageResume)
 onUnmounted(setLocalStorageResume)
 </script>
 
 <template>
   <div class="flex w-dvw flex-col items-center">
+    <!-- #region Profile -->
     <template v-if="isChanging">
       <button @click="clearLocalStorage">Clear local storage</button>
       <label @contextmenu.prevent="handleContextMenu" class="cursor-pointer">
@@ -200,7 +201,9 @@ onUnmounted(setLocalStorageResume)
         </label>
       </div>
     </template>
+    <!-- endregion -->
 
+    <!-- #region Education Experience -->
     <Base>
       <template v-if="isChanging" v-slot:header>
         <input
@@ -219,6 +222,19 @@ onUnmounted(setLocalStorageResume)
 
       <template v-if="isChanging">
         <ul>
+          <li class="grid grid-cols-4">
+            <input v-model="newEduItem[0]" placeholder="From to" />
+            <input v-model="newEduItem[1]" placeholder="University" />
+            <input v-model="newEduItem[2]" placeholder="Major" />
+            <div class="flex justify-center">
+              <button
+                class="w-20"
+                @click="(eduExperienceList.push(newEduItem), (newEduItem = ['', '', '']))"
+              >
+                add
+              </button>
+            </div>
+          </li>
           <li
             v-for="([fromTo, university, major], idx) of eduExperienceList"
             class="grid grid-cols-4"
@@ -243,7 +259,7 @@ onUnmounted(setLocalStorageResume)
             />
 
             <div class="flex justify-center">
-              <button @click="eduExperienceList.splice(idx, 1)" class="w-20">clear</button>
+              <button @click="eduExperienceList.splice(idx, 1)" class="w-20">remove</button>
             </div>
           </li>
         </ul>
@@ -262,6 +278,7 @@ onUnmounted(setLocalStorageResume)
         </ul>
       </template>
     </Base>
+    <!-- endregion -->
 
     <!-- Development Abilities -->
     <List :isChanging="isChanging" v-model="devAbilitiesList">
