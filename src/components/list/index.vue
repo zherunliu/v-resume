@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import { ref, toRefs, type VNode } from 'vue'
+import { ref, toRefs, watch, nextTick, type VNode } from 'vue'
 import Base from '../base/index.vue'
 
 interface IProps {
@@ -18,6 +18,27 @@ const props = withDefaults(defineProps<IProps>(), {
 
 const { isChanging } = toRefs(props)
 const newItem = ref('')
+
+const adjustHeight = (e: Event) => {
+  const target = e.target as HTMLTextAreaElement
+  target.style.height = 'auto'
+  target.style.height = target.scrollHeight + 'px'
+}
+
+const adjustAllHeights = async () => {
+  // Wait for the DOM to update before adjusting heights
+  await nextTick()
+  document.querySelectorAll('textarea').forEach((textarea) => {
+    textarea.style.height = 'auto'
+    textarea.style.height = textarea.scrollHeight + 'px'
+  })
+}
+
+watch(isChanging, (newValue) => {
+  if (newValue) {
+    adjustAllHeights()
+  }
+})
 </script>
 
 <template>
@@ -29,12 +50,23 @@ const newItem = ref('')
     <template v-if="isChanging">
       <ul class="ml-5 list-disc">
         <li class="flex gap-5">
-          <textarea class="flex-7/8" v-model="newItem" placeholder="newItem" />
-          <button class="flex-1/16" @click="itemList.push(newItem)">add</button>
+          <textarea
+            class="flex-7/8 resize-none overflow-hidden"
+            v-model="newItem"
+            rows="1"
+            placeholder="newItem"
+            @input="adjustHeight"
+          />
+          <button class="flex-1/16" @click="(itemList.push(newItem), (newItem = ''))">add</button>
         </li>
         <li v-for="(item, idx) of itemList" :key="idx" class="flex gap-5">
-          <!-- <textarea class="flex-7/8" v-model="item" placeholder="skill" /> -->
-          <textarea class="flex-7/8" v-model="itemList[idx]" placeholder="skill" />
+          <textarea
+            class="flex-7/8 resize-none overflow-hidden"
+            v-model="itemList[idx]"
+            rows="1"
+            placeholder="skill"
+            @input="adjustHeight"
+          />
           <button class="flex-1/16" @click="itemList.splice(idx, 1)">remove</button>
         </li>
       </ul>
