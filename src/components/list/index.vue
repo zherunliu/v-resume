@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, toRefs, watch, nextTick, type VNode } from 'vue'
 import Base from '../base/index.vue'
-
+import { type TPersonalExperience } from '../../schemas'
 interface IProps {
   isChanging?: boolean
 }
@@ -10,7 +10,7 @@ defineSlots<{
   header: () => VNode
 }>()
 
-const itemList = defineModel<string[]>({ required: true })
+const personalExperience = defineModel<TPersonalExperience>({ required: true })
 
 const props = withDefaults(defineProps<IProps>(), {
   isChanging: false,
@@ -44,7 +44,12 @@ watch(isChanging, (newValue) => {
 <template>
   <Base>
     <template v-slot:header>
-      <slot name="header" />
+      <input
+        v-if="isChanging"
+        v-model="personalExperience.header"
+        placeholder="Personal Experience"
+      />
+      <div v-else>{{ personalExperience.header }}</div>
     </template>
 
     <template v-if="isChanging">
@@ -57,23 +62,23 @@ watch(isChanging, (newValue) => {
             placeholder="newItem"
             @input="adjustHeight"
           />
-          <button class="flex-1/16" @click="(itemList.push(newItem), (newItem = ''))">add</button>
+          <button class="flex-1/16" @click="(personalExperience.details.push(newItem), (newItem = ''))">add</button>
         </li>
-        <li v-for="(item, idx) of itemList" :key="idx" class="flex gap-5">
+        <li v-for="(item, idx) of personalExperience.details" :key="idx" class="flex gap-5">
           <textarea
             class="flex-7/8 resize-none overflow-hidden"
-            v-model="itemList[idx]"
+            v-model="personalExperience.details[idx]"
             rows="1"
             placeholder="skill"
             @input="adjustHeight"
           />
-          <button class="flex-1/16" @click="itemList.splice(idx, 1)">remove</button>
+          <button class="flex-1/16" @click="personalExperience.details.splice(idx, 1)">remove</button>
         </li>
       </ul>
     </template>
     <template v-else>
       <ul class="ml-5 list-disc">
-        <li v-for="(item, idx) of itemList" :key="idx">{{ item }}</li>
+        <li v-for="(item, idx) of personalExperience.details" :key="idx">{{ item }}</li>
       </ul>
     </template>
   </Base>
