@@ -39,6 +39,8 @@ watch(isChanging, (newValue) => {
     adjustAllHeights()
   }
 })
+
+defineExpose({ adjustAllHeights })
 </script>
 
 <template>
@@ -62,7 +64,12 @@ watch(isChanging, (newValue) => {
             placeholder="newItem"
             @input="adjustHeight"
           />
-          <button class="flex-1/16" @click="(personalExperience.details.push(newItem), (newItem = ''))">add</button>
+          <button
+            class="flex-1/16"
+            @click="(personalExperience.details.push(newItem), (newItem = ''), adjustAllHeights())"
+          >
+            add
+          </button>
         </li>
         <li v-for="(item, idx) of personalExperience.details" :key="idx" class="flex gap-5">
           <textarea
@@ -72,7 +79,12 @@ watch(isChanging, (newValue) => {
             placeholder="skill"
             @input="adjustHeight"
           />
-          <button class="flex-1/16" @click="personalExperience.details.splice(idx, 1)">remove</button>
+          <button
+            class="flex-1/16"
+            @click="(personalExperience.details.splice(idx, 1), adjustAllHeights())"
+          >
+            remove
+          </button>
         </li>
       </ul>
     </template>

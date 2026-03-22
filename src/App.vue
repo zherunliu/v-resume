@@ -24,6 +24,55 @@ const githubHref = computed(() => `https://github.com/${github.value}`)
 
 const myInfo = ref('女, 24, 硕士, 前端/全栈工程师')
 
+const getDefaultPersonalExperienceList = () => [
+  {
+    header: '开发能力',
+    details: [
+      '了解大模型的多模态, 提示词增强, 会话记忆, 结构化输出, 检索增强生成 (RAG), 文档切割/向量化, 相似度搜索, topK 最相关文档切片, mcp 模型上下文协议, mcp 工具调用与开发, 大模型护轨 (guardrail), SSE 流式响应',
+      '熟悉 CSS, 熟悉 CSS 预处理器, 模块化, 原子化',
+      '熟悉 python、js/ts, 持续学习 AI、前端技术',
+      '熟悉 Vue3, Pinia, vue-router, 了解 Vue3 响应式原理',
+      '熟悉数据结构, 计算机网络, 设计模式',
+      '熟悉 Git, CI/CD, 有良好的代码风格',
+      '熟悉 Vite, 了解 Webpack',
+      '了解 Web 性能指标, 性能优化',
+      '了解 Node.js, 了解 Express.js, Nest.js',
+      '了解 MySQL, Redis 等后端技术栈',
+      '了解 JSX/TSX, 了解 React, React Fiber 架构',
+    ],
+  },
+  {
+    header: '职业经历',
+    details: [
+      '江苏 WIC 创新中心: 2025-06 ~ 2025-08, 前端 AI 实习生; 前端使用 Vue3 + Vite, 后端使用 Nest.js',
+      '前端 + AI 方面: 负责病虫害 AI 检测算法部署, 包括目标分类、目标检测和进化算法, 确保模型的稳定性; 搭建病虫害 AI 检测算法端到端平台, 支持算法可视化, 提升团队效率; 对于海量的病虫害样本, 使用虚拟滚动列表和图片懒加载提高前端渲染性能; 病虫害的检测结果包含大量专业术语, 对农民朋友不友好, 实习期间为病虫害检测平台接入大模型, 使用 langchain 实现 RAG 功能, 大模型可以检索以往的检测结果作为 RAG 文档, 农民朋友上传病虫害图片后, AI 专家使用通俗易懂的语言向农民朋友解释本次的检测结果并提供科学建议',
+      '后端方面: 使用 Nest.js 编写 REST API, 修改传统的使用 EventSource + GET 方法的 SSE 响应，使用 POST 实现',
+    ],
+  },
+  {
+    header: '项目经历',
+    details: [
+      '企业级管理平台, 仓库链接: https://github.com/zherunliu/ldv; 技术栈: Vite、Vue3、Axios、Sass、TailwindCSS, Pinia、vue-router, 虚拟滚动列表: 分别使用 @tanstack/vue-virtual 和手写实现; 使用 Prettier、ESLint、Husky、lint-staged 保证代码质量; 使用 Rollup 可视化插件分析打包产物体积; 使用 CI/CD 部署到 github-pages; 性能优化: 缓存组件、虚拟滚动列表; 手写观察者模式的事件总线; 编写 Axios 前置/后置拦截器处理 HTTP 请求/响应错误; 通过 vue-router 前置/后置路由守卫和路由元信息, 实现路由权限控制',
+    ],
+  },
+  {
+    header: '获奖经历',
+    details: [
+      '南京邮电大学一等奖学金',
+      '南京邮电大学优秀研究生',
+      '南京邮电大学小米奖学金',
+      '连续 3 年温州大学三等奖学金',
+    ],
+  },
+  {
+    header: '科研经历',
+    details: [
+      '论文:「基于自适应不确定性度量的离线强化学习算法」北大中文核心期刊',
+      '论文:「基于模型的离线-在线强化学习算法」离线强化学习受行为策略限制, 在线强化学习交互开销大, 离线到在线方案有分布偏移问题: 引入定向探索模型, 引导智能体探索高价值和高不确定性的状态动作区域; 为离线到在线不同阶段适配不同的不确定性, 同时纳入动态自适应权重, 实现平滑在线交互; 多环境实验证明, 算法在减少交互步数的同时显著提升策略性能, 优于目前主流方法',
+    ],
+  },
+]
+
 const newEduItem = ref(['', '', ''] as TEduExperience)
 
 const eduExperienceList = ref<TEduExperienceList>({
@@ -35,64 +84,7 @@ const eduExperienceList = ref<TEduExperienceList>({
   ],
 })
 
-const devAbilitiesList: TPersonalExperience = {
-  header: '开发能力',
-  details: [
-    '了解大模型的多模态, 提示词增强, 会话记忆, 结构化输出, 检索增强生成 (RAG), 文档切割/向量化, 相似度搜索, topK 最相关文档切片, mcp 模型上下文协议, mcp 工具调用与开发, 大模型护轨 (guardrail), SSE 流式响应',
-    '熟悉 CSS, 熟悉 CSS 预处理器, 模块化, 原子化',
-    '熟悉 python、js/ts, 持续学习 AI、前端技术',
-    '熟悉 Vue3, Pinia, vue-router, 了解 Vue3 响应式原理',
-    '熟悉数据结构, 计算机网络, 设计模式',
-    '熟悉 Git, CI/CD, 有良好的代码风格',
-    '熟悉 Vite, 了解 Webpack',
-    '了解 Web 性能指标, 性能优化',
-    '了解 Node.js, 了解 Express.js, Nest.js',
-    '了解 MySQL, Redis 等后端技术栈',
-    '了解 JSX/TSX, 了解 React, React Fiber 架构',
-  ],
-}
-
-const jobExperienceList: TPersonalExperience = {
-  header: '职业经历',
-  details: [
-    '江苏 WIC 创新中心: 2025-06 ~ 2025-08, 前端 AI 实习生; 前端使用 Vue3 + Vite, 后端使用 Nest.js',
-    '前端 + AI 方面: 负责病虫害 AI 检测算法部署, 包括目标分类、目标检测和进化算法, 确保模型的稳定性; 搭建病虫害 AI 检测算法端到端平台, 支持算法可视化, 提升团队效率; 对于海量的病虫害样本, 使用虚拟滚动列表和图片懒加载提高前端渲染性能; 病虫害的检测结果包含大量专业术语, 对农民朋友不友好, 实习期间为病虫害检测平台接入大模型, 使用 langchain 实现 RAG 功能, 大模型可以检索以往的检测结果作为 RAG 文档, 农民朋友上传病虫害图片后, AI 专家使用通俗易懂的语言向农民朋友解释本次的检测结果并提供科学建议',
-    '后端方面: 使用 Nest.js 编写 REST API, 修改传统的使用 EventSource + GET 方法的 SSE 响应，使用 POST 实现',
-  ],
-}
-
-const awardExperienceList: TPersonalExperience = {
-  header: '获奖经历',
-  details: [
-    '南京邮电大学一等奖学金',
-    '南京邮电大学优秀研究生',
-    '南京邮电大学小米奖学金',
-    '连续 3 年温州大学三等奖学金',
-  ],
-}
-
-const projectExperienceList: TPersonalExperience = {
-  header: '项目经历',
-  details: [
-    '企业级管理平台, 仓库链接: https://github.com/zherunliu/ldv; 技术栈: Vite、Vue3、Axios、Sass、TailwindCSS, Pinia、vue-router, 虚拟滚动列表: 分别使用 @tanstack/vue-virtual 和手写实现; 使用 Prettier、ESLint、Husky、lint-staged 保证代码质量; 使用 Rollup 可视化插件分析打包产物体积; 使用 CI/CD 部署到 github-pages; 性能优化: 缓存组件、虚拟滚动列表; 手写观察者模式的事件总线; 编写 Axios 前置/后置拦截器处理 HTTP 请求/响应错误; 通过 vue-router 前置/后置路由守卫和路由元信息, 实现路由权限控制',
-  ],
-}
-
-const researchExperienceList: TPersonalExperience = {
-  header: '科研经历',
-  details: [
-    '论文:「基于自适应不确定性度量的离线强化学习算法」北大中文核心期刊',
-    '论文:「基于模型的离线-在线强化学习算法」离线强化学习受行为策略限制, 在线强化学习交互开销大, 离线到在线方案有分布偏移问题: 引入定向探索模型, 引导智能体探索高价值和高不确定性的状态动作区域; 为离线到在线不同阶段适配不同的不确定性, 同时纳入动态自适应权重, 实现平滑在线交互; 多环境实验证明, 算法在减少交互步数的同时显著提升策略性能, 优于目前主流方法',
-  ],
-}
-
-const personalExperienceList = ref<TPersonalExperience[]>([
-  devAbilitiesList,
-  jobExperienceList,
-  projectExperienceList,
-  awardExperienceList,
-  researchExperienceList,
-])
+const personalExperienceList = ref<TPersonalExperience[]>(getDefaultPersonalExperienceList())
 const handleContextMenu = () => {
   if (isChanging.value) {
     setLocalStorageResume()
@@ -102,6 +94,21 @@ const handleContextMenu = () => {
 
 const clearLocalStorage = () => {
   localStorage.removeItem('resume')
+  name.value = '刘哲闰'
+  tel.value = '19883739397'
+  email.value = 'rrrico@foxmail.com'
+  github.value = 'zherunliu'
+  myInfo.value = '女, 24, 硕士, 前端/全栈工程师'
+  eduExperienceList.value = {
+    header: '教育经历',
+    details: [
+      ['高中: 2016-2019', '衡阳市第八中学', '理科'],
+      ['本科: 2019-2023', '温州大学', '数据科学与大数据技术'],
+      ['硕士: 2023-2026', '南京邮电大学', '人工智能'],
+    ],
+  }
+  personalExperienceList.value = getDefaultPersonalExperienceList()
+  adjustAllListHeights()
 }
 
 const getLocalStorageResume = () => {
@@ -137,6 +144,20 @@ const setLocalStorageResume = () => {
     }),
   )
 }
+
+const listRefs = ref<InstanceType<typeof List>[]>([])
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const setListRef = (el: any, index: number) => {
+  if (el) {
+    listRefs.value[index] = el
+  }
+}
+
+const adjustAllListHeights = () => {
+  listRefs.value.forEach((ref) => ref.adjustAllHeights())
+}
+
 onMounted(getLocalStorageResume)
 onUnmounted(setLocalStorageResume)
 </script>
@@ -301,7 +322,11 @@ onUnmounted(setLocalStorageResume)
       v-for="(personalExperience, index) in personalExperienceList"
       :key="personalExperience.header"
     >
-      <List :isChanging="isChanging" v-model="personalExperienceList[index]" />
+      <List
+        :isChanging="isChanging"
+        :ref="(el) => setListRef(el, index)"
+        v-model="personalExperienceList[index]"
+      />
     </template>
     <!-- endregion -->
   </div>
