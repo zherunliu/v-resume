@@ -1,13 +1,8 @@
 <script setup lang="ts">
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, onMounted, onUnmounted, ref, useTemplateRef } from 'vue'
 import Base from './components/base/index.vue'
 import List from './components/list/index.vue'
-import {
-  resumeSchema,
-  type TEduExperience,
-  type TEduExperienceList,
-  type TPersonalExperience,
-} from './schemas'
+import { resumeSchema, type TEduExperienceList, type TPersonalExperience } from './schemas'
 
 const isChanging = ref(false)
 
@@ -45,14 +40,14 @@ const getDefaultPersonalExperienceList = () => [
     header: '职业经历',
     details: [
       '江苏 WIC 创新中心: 2025-06 ~ 2025-08, 前端 AI 实习生; 前端使用 Vue3 + Vite, 后端使用 Nest.js',
-      '前端 + AI 方面: 负责病虫害 AI 检测算法部署, 包括目标分类、目标检测和进化算法, 确保模型的稳定性; 搭建病虫害 AI 检测算法端到端平台, 支持算法可视化, 提升团队效率; 对于海量的病虫害样本, 使用虚拟滚动列表和图片懒加载提高前端渲染性能; 病虫害的检测结果包含大量专业术语, 对农民朋友不友好, 实习期间为病虫害检测平台接入大模型, 使用 langchain 实现 RAG 功能, 大模型可以检索以往的检测结果作为 RAG 文档, 农民朋友上传病虫害图片后, AI 专家使用通俗易懂的语言向农民朋友解释本次的检测结果并提供科学建议',
+      '前端 + AI 方面: 负责病虫害 AI 检测算法部署, 包括目标分类、目标检测和进化算法, 确保模型的稳定性; 搭建病虫害 AI 检测算法端到端平台, 支持算法可视化, 提升团队效率; 对于海量的病虫害样本, 使用虚拟滚动列表和图片懒加载提高前端渲染性能; 为病虫害检测平台接入大模型, 使用 langchain 实现 RAG 功能, 检索以往的检测结果作为 RAG 文档, AI 辅助非专业人士解读检测结果并提供科学建议',
       '后端方面: 使用 Nest.js 编写 REST API, 修改传统的使用 EventSource + GET 方法的 SSE 响应，使用 POST 实现',
     ],
   },
   {
     header: '项目经历',
     details: [
-      '企业级管理平台, 仓库链接: https://github.com/zherunliu/ldv; 技术栈: Vite、Vue3、Axios、Sass、TailwindCSS, Pinia、vue-router, 虚拟滚动列表: 分别使用 @tanstack/vue-virtual 和手写实现; 使用 Prettier、ESLint、Husky、lint-staged 保证代码质量; 使用 Rollup 可视化插件分析打包产物体积; 使用 CI/CD 部署到 github-pages; 性能优化: 缓存组件、虚拟滚动列表; 手写观察者模式的事件总线; 编写 Axios 前置/后置拦截器处理 HTTP 请求/响应错误; 通过 vue-router 前置/后置路由守卫和路由元信息, 实现路由权限控制',
+      '企业级管理平台, 仓库链接: https://github.com/zherunliu/ldv; 技术栈: Vite、Vue3、Axios、Sass、TailwindCSS、Pinia、vue-router; 虚拟滚动列表: 分别使用 @tanstack/vue-virtual 和手写实现; 使用 Prettier、ESLint、Husky、lint-staged 保证代码质量; 使用 Rollup 可视化插件分析打包产物体积; 使用 CI/CD 部署到 github-pages; 性能优化: 缓存组件、虚拟滚动列表; 手写观察者模式的事件总线; 编写 Axios 前置/后置拦截器处理 HTTP 请求/响应错误; 通过 vue-router 前置/后置路由守卫和路由元信息, 实现路由权限控制',
     ],
   },
   {
@@ -68,12 +63,10 @@ const getDefaultPersonalExperienceList = () => [
     header: '科研经历',
     details: [
       '论文:「基于自适应不确定性度量的离线强化学习算法」北大中文核心期刊',
-      '论文:「基于模型的离线-在线强化学习算法」离线强化学习受行为策略限制, 在线强化学习交互开销大, 离线到在线方案有分布偏移问题: 引入定向探索模型, 引导智能体探索高价值和高不确定性的状态动作区域; 为离线到在线不同阶段适配不同的不确定性, 同时纳入动态自适应权重, 实现平滑在线交互; 多环境实验证明, 算法在减少交互步数的同时显著提升策略性能, 优于目前主流方法',
+      '论文:「基于不确定性探索模型的离线到在线强化学习算法」离线强化学习受行为策略限制, 在线强化学习交互开销大, 离线到在线方案有分布偏移问题: 引入不确定性探索模型, 引导智能体探索高价值和高不确定性的状态动作区域; 为离线到在线不同阶段适配不同的不确定性, 同时纳入动态自适应权重, 实现平滑在线交互; 多环境实验证明, 算法在减少交互步数的同时显著提升策略性能, 优于目前主流方法',
     ],
   },
 ]
-
-const newEduItem = ref(['', '', ''] as TEduExperience)
 
 const eduExperienceList = ref<TEduExperienceList>({
   header: '教育经历',
@@ -92,6 +85,13 @@ const handleContextMenu = () => {
   isChanging.value = !isChanging.value
 }
 
+const personalExperienceListRef = useTemplateRef('personalExperienceListRef')
+const moveUpEdu = (index: number) => {
+  if (index === 0) return
+  const temp = eduExperienceList.value.details[index - 1]
+  eduExperienceList.value.details[index - 1] = eduExperienceList.value.details[index]
+  eduExperienceList.value.details[index] = temp
+}
 const clearLocalStorage = () => {
   localStorage.removeItem('resume')
   name.value = '刘哲闰'
@@ -108,7 +108,7 @@ const clearLocalStorage = () => {
     ],
   }
   personalExperienceList.value = getDefaultPersonalExperienceList()
-  adjustAllListHeights()
+  personalExperienceListRef.value?.adjustAllHeights()
 }
 
 const getLocalStorageResume = () => {
@@ -143,19 +143,6 @@ const setLocalStorageResume = () => {
       personalExperienceList: personalExperienceList.value,
     }),
   )
-}
-
-const listRefs = ref<InstanceType<typeof List>[]>([])
-
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-const setListRef = (el: any, index: number) => {
-  if (el) {
-    listRefs.value[index] = el
-  }
-}
-
-const adjustAllListHeights = () => {
-  listRefs.value.forEach((ref) => ref.adjustAllHeights())
 }
 
 onMounted(getLocalStorageResume)
@@ -253,51 +240,42 @@ onUnmounted(setLocalStorageResume)
 
       <template v-if="isChanging">
         <ul>
-          <li class="grid grid-cols-4">
-            <input v-model="newEduItem[0]" placeholder="From to" />
-            <input v-model="newEduItem[1]" placeholder="University" />
-            <input v-model="newEduItem[2]" placeholder="Major" />
-            <div class="flex justify-center">
-              <button
-                class="w-20"
-                @click="(eduExperienceList.details.push(newEduItem), (newEduItem = ['', '', '']))"
-              >
-                add
-              </button>
-            </div>
-          </li>
           <li
+            class="flex gap-5"
             v-for="([fromTo, university, major], idx) of eduExperienceList.details"
-            class="grid grid-cols-4"
             :key="idx"
           >
-            <input
-              :value="fromTo"
-              placeholder="From to"
-              @change="
-                (e) => (eduExperienceList.details[idx][0] = (e.target as HTMLInputElement).value)
-              "
-            />
+            <div class="flex-1 grid grid-cols-3">
+              <input
+                :value="fromTo"
+                placeholder="From to"
+                @change="
+                  (e) => (eduExperienceList.details[idx][0] = (e.target as HTMLInputElement).value)
+                "
+              />
 
-            <input
-              :value="university"
-              placeholder="University"
-              @change="
-                (e) => (eduExperienceList.details[idx][1] = (e.target as HTMLInputElement).value)
-              "
-            />
+              <input
+                :value="university"
+                placeholder="University"
+                @change="
+                  (e) => (eduExperienceList.details[idx][1] = (e.target as HTMLInputElement).value)
+                "
+              />
 
-            <input
-              :value="major"
-              placeholder="Major"
-              @change="
-                (e) => (eduExperienceList.details[idx][2] = (e.target as HTMLInputElement).value)
-              "
-            />
-
-            <div class="flex justify-center">
-              <button @click="eduExperienceList.details.splice(idx, 1)" class="w-20">remove</button>
+              <input
+                :value="major"
+                placeholder="Major"
+                @change="
+                  (e) => (eduExperienceList.details[idx][2] = (e.target as HTMLInputElement).value)
+                "
+              />
             </div>
+
+            <button @click="eduExperienceList.details.splice(idx, 0, ['', '', ''])" class="w-20">
+              add
+            </button>
+            <button @click="moveUpEdu(idx)" class="w-20">moveUp</button>
+            <button class="w-20" @click="eduExperienceList.details.splice(idx, 1)">remove</button>
           </li>
         </ul>
       </template>
@@ -318,16 +296,12 @@ onUnmounted(setLocalStorageResume)
     <!-- endregion -->
 
     <!-- #region Personal Experience -->
-    <template
-      v-for="(personalExperience, index) in personalExperienceList"
-      :key="personalExperience.header"
-    >
-      <List
-        :isChanging="isChanging"
-        :ref="(el) => setListRef(el, index)"
-        v-model="personalExperienceList[index]"
-      />
-    </template>
+
+    <List
+      :isChanging="isChanging"
+      v-model="personalExperienceList"
+      ref="personalExperienceListRef"
+    />
     <!-- endregion -->
   </div>
 </template>
